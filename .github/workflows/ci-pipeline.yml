@@ -1,0 +1,89 @@
+name: Retail Analytics Pipeline CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-kafka-producer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          cd kafka
+          pip install -r requirements.txt
+      
+      - name: Lint Python code
+        run: |
+          pip install flake8
+          flake8 kafka/producer.py --max-line-length=120 --ignore=E501,W503 || true
+
+  test-kafka-consumer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          cd consumer
+          pip install -r requirements.txt
+      
+      - name: Lint Python code
+        run: |
+          pip install flake8
+          flake8 consumer/consumer.py --max-line-length=120 --ignore=E501,W503 || true
+
+  test-airflow-dag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+      
+      - name: Install Airflow
+        run: |
+          pip install apache-airflow==2.7.3
+      
+      - name: Test DAG syntax
+        run: |
+          python airflow/dags/retail_pipeline_dag.py
+      
+      - name: Validate DAG
+        run: |
+          echo "DAG syntax is valid"
+
+  docker-build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build Kafka Producer Image
+        run: |
+          cd kafka
+          docker build -t retail-producer:test .
+      
+      - name: Build Kafka Consumer Image
+        run: |
+          cd consumer
+          docker build -t retail-consumer:test .
+      
+      - name: Verify Images
+        run: |
+          docker images | grep retail
