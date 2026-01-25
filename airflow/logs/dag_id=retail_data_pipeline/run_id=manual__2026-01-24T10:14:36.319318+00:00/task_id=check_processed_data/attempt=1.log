@@ -1,0 +1,19 @@
+[2026-01-24T10:14:38.321+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: retail_data_pipeline.check_processed_data manual__2026-01-24T10:14:36.319318+00:00 [queued]>
+[2026-01-24T10:14:38.330+0000] {taskinstance.py:1159} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: retail_data_pipeline.check_processed_data manual__2026-01-24T10:14:36.319318+00:00 [queued]>
+[2026-01-24T10:14:38.331+0000] {taskinstance.py:1361} INFO - Starting attempt 1 of 2
+[2026-01-24T10:14:38.348+0000] {taskinstance.py:1382} INFO - Executing <Task(BashOperator): check_processed_data> on 2026-01-24 10:14:36.319318+00:00
+[2026-01-24T10:14:38.354+0000] {standard_task_runner.py:57} INFO - Started process 277 to run task
+[2026-01-24T10:14:38.357+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'retail_data_pipeline', 'check_processed_data', 'manual__2026-01-24T10:14:36.319318+00:00', '--job-id', '3', '--raw', '--subdir', 'DAGS_FOLDER/retail_pipeline_dag.py', '--cfg-path', '/tmp/tmp18yluuke']
+[2026-01-24T10:14:38.361+0000] {standard_task_runner.py:85} INFO - Job 3: Subtask check_processed_data
+[2026-01-24T10:14:38.420+0000] {task_command.py:416} INFO - Running <TaskInstance: retail_data_pipeline.check_processed_data manual__2026-01-24T10:14:36.319318+00:00 [running]> on host 8165a927dd18
+[2026-01-24T10:14:38.504+0000] {taskinstance.py:1662} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='retail_data_pipeline' AIRFLOW_CTX_TASK_ID='check_processed_data' AIRFLOW_CTX_EXECUTION_DATE='2026-01-24T10:14:36.319318+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-01-24T10:14:36.319318+00:00'
+[2026-01-24T10:14:38.505+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-01-24T10:14:38.505+0000] {subprocess.py:75} INFO - Running command: ['/bin/bash', '-c', "echo '=== PROCESSED DATA ===' && ls /opt/project/data/processed/retail/ | wc -l && echo 'files found'"]
+[2026-01-24T10:14:38.516+0000] {subprocess.py:86} INFO - Output:
+[2026-01-24T10:14:38.518+0000] {subprocess.py:93} INFO - === PROCESSED DATA ===
+[2026-01-24T10:14:38.788+0000] {subprocess.py:93} INFO - 16883
+[2026-01-24T10:14:38.788+0000] {subprocess.py:93} INFO - files found
+[2026-01-24T10:14:38.789+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-01-24T10:14:38.820+0000] {taskinstance.py:1400} INFO - Marking task as SUCCESS. dag_id=retail_data_pipeline, task_id=check_processed_data, execution_date=20260124T101436, start_date=20260124T101438, end_date=20260124T101438
+[2026-01-24T10:14:38.853+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2026-01-24T10:14:38.877+0000] {taskinstance.py:2778} INFO - 1 downstream tasks scheduled from follow-on schedule check
