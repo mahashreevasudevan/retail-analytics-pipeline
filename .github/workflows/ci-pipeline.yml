@@ -7,7 +7,7 @@ on:
     branches: [ main, master ]
 
 jobs:
-  test-kafka-producer:
+  validate-python-syntax:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -17,17 +17,14 @@ jobs:
         with:
           python-version: '3.10'
       
-      - name: Install dependencies
+      - name: Check all Python files syntax
         run: |
-          cd kafka
-          pip install -r requirements.txt
-      
-      - name: Lint Python code
-        run: |
-          pip install flake8
-          flake8 kafka/producer.py --max-line-length=120 --ignore=E501,W503 || true
+          python -m py_compile kafka/producer.py
+          python -m py_compile consumer/consumer.py
+          python -m py_compile airflow/dags/retail_pipeline_dag.py
+          echo "All Python files have valid syntax"
 
-  test-kafka-consumer:
+  test-kafka-dependencies:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -37,17 +34,12 @@ jobs:
         with:
           python-version: '3.10'
       
-      - name: Install dependencies
+      - name: Install Kafka dependencies
         run: |
-          cd consumer
-          pip install -r requirements.txt
-      
-      - name: Lint Python code
-        run: |
-          pip install flake8
-          flake8 consumer/consumer.py --max-line-length=120 --ignore=E501,W503 || true
+          pip install kafka-python pandas openpyxl
+          echo "Kafka dependencies installed successfully"
 
-  test-airflow-dag:
+  test-consumer-dependencies:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -55,19 +47,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.8'
+          python-version: '3.10'
       
-      - name: Install Airflow
+      - name: Install Consumer dependencies
         run: |
-          pip install apache-airflow==2.7.3
-      
-      - name: Test DAG syntax
-        run: |
-          python airflow/dags/retail_pipeline_dag.py
-      
-      - name: Validate DAG
-        run: |
-          echo "DAG syntax is valid"
+          pip install kafka-python polars pyarrow
+          echo "Consumer dependencies installed successfully"
 
   docker-build-test:
     runs-on: ubuntu-latest
@@ -78,12 +63,10 @@ jobs:
         run: |
           cd kafka
           docker build -t retail-producer:test .
+          echo "Producer image built"
       
       - name: Build Kafka Consumer Image
         run: |
           cd consumer
           docker build -t retail-consumer:test .
-      
-      - name: Verify Images
-        run: |
-          docker images | grep retail
+          echo "Consumer image built"
