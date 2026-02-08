@@ -244,12 +244,4 @@ In Airflow UI, enable the `retail_data_pipeline` DAG and trigger it manually. Th
 - Build REST API for programmatic data access
 - Create data catalog for discovery
 
-## Author
 
-Mahashree Vasudevan
-
-GitHub: github.com/mahashreevasudevan
-
-## License
-
-MIT License
